@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration>
+<configuration debug="true" scan="true" scanPeriod="30 seconds"><!-- 'milliseconds','seconds','minutes' and 'hours' -->
+	<contextName>soofa-core</contextName>
+	<Property name="log.base" value="D://logs/soofa/" />
+	<Property name="log.name" value="${web.project.name}" />
+	<jmxConfigurator />
+	<!-- 控制台输出日志 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<charset>UTF-8</charset>
+			<pattern>%-5level [%contextName] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %logger - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<!-- 文件输出日志 (文件大小策略进行文件输出，超过指定大小对文件备份) -->
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.base}/${log.name}.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"><!-- rollover daily -->
+			<FileNamePattern>${log.base}/${log.name}-log-%d{yyyy-MM-dd}.%i.zip</FileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"> 
+				<maxFileSize>5MB</maxFileSize><!-- or whenever the file size reaches 5MB -->
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<!-- <maxHistory></maxHistory> -->
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<charset>UTF-8</charset>
+			<Pattern>%-5level [%contextName] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %logger.%method - %msg%n</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">	
+		<!-- <filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<OnMismatch>DENY</OnMismatch>
+			<OnMatch>ACCEPT</OnMatch>
+		</filter> -->
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level><!-- WARN以下的拒绝,等于或以上的中立 -->
+		</filter>
+		<File>${log.base}/${log.name}-err.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"><!-- rollover daily -->
+			<FileNamePattern>${log.base}/${log.name}-log-%d{yyyy-MM-dd}.%i.zip</FileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"> 
+				<maxFileSize>5MB</maxFileSize><!-- or whenever the file size reaches 5MB -->
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<!-- <maxHistory></maxHistory> -->
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<charset>UTF-8</charset>
+			<Pattern>%-5level [%contextName] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %logger.%method - %msg%n</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="TRACE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.base}/${log.name}-trace.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>${log.base}/${log.name}-trace.log.%i.zip</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>12</MaxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>10MB</MaxFileSize>
+		</triggeringPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<charset>UTF-8</charset>
+			<Pattern>%-5level [%contextName] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %logger.%method - %msg%n</Pattern>
+		</encoder>
+	</appender>
+	<root level="${log.root.level}">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+		<appender-ref ref="FILE-ERROR" />
+	</root>
+
+	<logger name="com.slsy.framework.web" additivity="true" level="DEBUG" />
+	<logger name="com.slsy.framework" additivity="true" level="${log.slsy.level}" />
+	<logger name="org.springframework" additivity="true" level="INFO" />
+	<logger name="org.hibernate" additivity="true" level="DEBUG" />
+	<logger name="org.apache.commons" additivity="true" level="INFO" />
+	<logger name="net.sf.ehcache" additivity="true" level="${net.ehcache.level}" />
+	<logger name="java.sql" additivity="true" level="DEBUG" />
+	<logger name="com.torch.bank.dal.mapper" additivity="true" level="DEBUG" />
+</configuration>
