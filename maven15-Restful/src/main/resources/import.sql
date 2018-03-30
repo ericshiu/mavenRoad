@@ -1,0 +1,1 @@
+INSERT INTO `Seckill`(`seckillID`, `createTime`, `name`) VALUES ('1',now(),'小黑')
