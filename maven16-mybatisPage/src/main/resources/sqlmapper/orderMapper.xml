@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.torch.test.dal.mapper.OrderMapper">
+	<resultMap type="com.torch.test.dal.model.OrderModel" id="orderModel">
+		<result column="id" property="id" jdbcType="DECIMAL" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="amt" property="amt" jdbcType="VARCHAR" />
+		<result column="quantity" property="quantity" jdbcType="DECIMAL" />	
+	</resultMap>
+	<select id="queryOrderModelById" resultMap="orderModel">
+		SELECT `id`, `name`, `amt`, `quantity` FROM `order` WHERE id=#{id,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByPageNumSize" resultMap="orderModel">
+		SELECT `id`, `name`, `amt`, `quantity` FROM `order`
+	</select>
+</mapper>
